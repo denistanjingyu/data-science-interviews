@@ -1,9 +1,8 @@
 # Theoretical interview questions
 
-* The list of questions is based on this post: https://hackernoon.com/160-data-science-interview-questions-415s3y2a
-* Legend: 👶 easy ‍⭐️ medium 🚀 expert
-* Do you know how to answer questions without answers? Please create a PR
-* See an error? Please create a PR with fix
+The list of questions is based on this post: https://hackernoon.com/160-data-science-interview-questions-415s3y2a
+
+Legend: 👶 easy ‍⭐️ medium 🚀 expert
 
 ## Supervised machine learning
 
@@ -468,8 +467,13 @@ Answer here
 
 **What happens when we have correlated features in our data? ‍⭐️**
 
-Answer here
+Correlated features in general don't improve models (although it depends on the specifics of the problem like the number of variables and the degree of correlation), but they affect specific models in different ways and to varying extents:
 
+- For linear models (e.g., linear regression or logistic regression), multicolinearity can yield solutions that are wildly varying and possibly numerically unstable.
+
+- Random forests can be good at detecting interactions between different features, but highly correlated features can mask these interactions.
+
+More generally, this can be viewed as a special case of Occam's razor. A simpler model is preferable, and, in some sense, a model with fewer features is simpler. 
 <br/>
 
 
@@ -483,7 +487,9 @@ Answer here
 
 **What’s the difference between random forest and gradient boosting? ‍⭐️**
 
-Answer here
+- Boosting is based on weak learners (high bias, low variance). In terms of decision trees, weak learners are shallow trees, sometimes even as small as decision stumps (trees with two leaves). Boosting reduces error mainly by reducing bias (and also to some extent variance, by aggregating the output from many models).
+- Random Forest uses fully grown decision trees (low bias, high variance). It tackles the error reduction task in the opposite way: by reducing variance. The trees are made uncorrelated to maximize the decrease in variance, but the algorithm cannot reduce bias (which is slightly higher than the bias of an individual tree in the forest). Hence the need for large, unpruned trees, so that the bias is initially as low as possible.
+- Boosting is sequential, RF grows trees in parallel. 
 
 <br/>
 
@@ -513,7 +519,10 @@ Answer here
 
 **How do you approach tuning parameters in XGBoost or LightGBM? 🚀**
 
-Answer here
+- Choose a relatively high learning rate. Generally a learning rate of 0.1 works but somewhere between 0.05 to 0.3 should work for different problems. Determine the optimum number of trees for this learning rate. XGBoost has a very useful function called as “cv” which performs cross-validation at each boosting iteration and thus returns the optimum number of trees required.
+- Tune tree-specific parameters ( max_depth, min_child_weight, gamma, subsample, colsample_bytree) for decided learning rate and number of trees. Note that we can choose different parameters to define a tree and I’ll take up an example here.
+- Tune regularization parameters (lambda, alpha) for xgboost which can help reduce model complexity and enhance performance.
+- Lower the learning rate and decide the optimal parameters .
 
 <br/>
 
@@ -535,7 +544,10 @@ Answer here
 
 **What’s the difference between grid search parameter tuning strategy and random search? When to use one or another? ‍⭐️**
 
-Answer here
+- In Grid Search, we try every combination of a preset list of values of the hyper-parameters and evaluate the model for each combination. The pattern followed here is similar to the grid, where all the values are placed in the form of a matrix. Each set of parameters is taken into consideration and the accuracy is noted. Once all the combinations are evaluated, the model with the set of parameters which give the top accuracy is considered to be the best.
+- Random search is a technique where random combinations of the hyperparameters are used to find the best solution for the built model. It tries random combinations of a range of values. To optimise with random search, the function is evaluated at some number of random configurations in the parameter space.
+- Random search works best for lower dimensional data since the time taken to find the right set is less with less number of iterations.
+- The best strategy for your problem is the one that finds the best value the fastest and with the fewest function evaluations and it may vary from problem to problem. While less common in machine learning practice than grid search, random search has been shown to find equal or better values than grid search within fewer function evaluations for certain types of problems.
 
 <br/>
 
@@ -556,13 +568,13 @@ Answer here
 
 **Why do we need activation functions? 👶**
 
-Answer here
+The purpose of an activation function is to add some kind of non-linear property to the function, which is a neural network. Without the activation functions, the neural network could perform only linear mappings from inputs x to the outputs y.
 
 <br/>
 
 **What are the problems with sigmoid as an activation function? ‍⭐️**
 
-Answer here
+The sigmoid function, squishes a large input space into a small input space between 0 and 1. Therefore, a large change in the input of the sigmoid function will cause a small change in the output. Hence, the derivative becomes small.
 
 <br/>
 
@@ -579,20 +591,29 @@ Answer here
 <br/>
 
 **What if we set all the weights of a neural network to 0? ‍⭐️**
+First, neural networks tend to get stuck in local minima, so it's a good idea to give them many different starting values. You can't do that if they all start at zero.
 
-Answer here
+Second, if the neurons start with the same weights, then all the neurons will follow the same gradient, and will always end up doing the same thing as one another.
 
 <br/>
 
 **What regularization techniques for neural nets do you know? ‍⭐️**
 
-Answer here
+1) Activity Regularization: Penalize the model during training base on the magnitude of the activations.
+2) Weight Constraint: Constrain the magnitude of weights to be within a range or below a limit.
+3) Dropout: Probabilistically remove inputs during training.
+4) Noise: Add statistical noise to inputs during training.
+5) Early Stopping: Monitor model performance on a validation set and stop training when performance degrades.
 
 <br/>
 
 **What is dropout? Why is it useful? How does it work? ‍⭐️**
 
-Answer here
+Dropout is a technique where randomly selected neurons are ignored during training. They are “dropped-out” randomly. This means that their contribution to the activation of downstream neurons is temporally removed on the forward pass and any weight updates are not applied to the neuron on the backward pass.
+
+You can imagine that if neurons are randomly dropped out of the network during training, that other neurons will have to step in and handle the representation required to make predictions for the missing neurons. This is believed to result in multiple independent internal representations being learned by the network.
+
+The effect is that the network becomes less sensitive to the specific weights of neurons. This in turn results in a network that is capable of better generalization and is less likely to overfit the training data.
 
 <br/>
 
@@ -601,7 +622,7 @@ Answer here
 
 **What is backpropagation? How does it work? Why do we need it? ‍⭐️**
 
-Answer here
+Back-propagation is the essence of neural net training. It is the practice of fine-tuning the weights of a neural net based on the error rate (i.e. loss) obtained in the previous epoch (i.e. iteration). Proper tuning of the weights ensures lower error rates, making the model reliable by increasing its generalization.
 
 <br/>
 
@@ -876,13 +897,25 @@ Answer here
 ## Dimensionality reduction
 **What is the curse of dimensionality? Why do we care about it? ‍⭐️**
 
-Answer here
+- The curse of dimensionality refers to various phenomena that arise when analyzing and organizing data in high-dimensional spaces (often with hundreds or thousands of dimensions) that do not occur in low-dimensional settings such as the three-dimensional physical space of everyday experience.
+- Working with data becomes more computationally demanding as the number of dimensions increases.
+- Highly correlated dimensions can harmfully impact other statistical techniques which rely upon assumptions of independence. This could lead to much-dreaded problems such as over-fitting.
+- In higher dimensions our data are more sparse and more similarly spaced apart. This makes most distance functions less effective.
 
 <br/>
 
 **Do you know any dimensionality reduction techniques? ‍⭐️**
 
-Answer here
+Ratio of missing values
+Low variance in the column values
+High correlation between two columns
+Principal component analysis (PCA)
+Candidates and split columns in a random forest
+Backward feature elimination
+Forward feature construction
+Linear discriminant analysis (LDA)
+Neural autoencoder
+t-distributed stochastic neighbor embedding (t-SNE)
 
 <br/>
 
@@ -966,7 +999,7 @@ Answer here
 
 **What is a recommender system? 👶**
 
-Answer here
+A recommender system, or a recommendation system, is a subclass of information filtering system that seeks to predict the "rating" or "preference" a user would give to an item. They are primarily used in commercial applications.
 
 <br/>
 
@@ -990,13 +1023,13 @@ Answer here
 
 **What is the cold start problem? ‍⭐️**
 
-Answer here
+Personalized recommender systems take advantage of users past history to make predictions. The cold start problem concerns the personalized recommendations for users with no or few past history (new users). Providing recommendations to users with small past history becomes a difficult problem for CF models because their learning and predictive ability is limited. 
 
 <br/>
 
 **Possible approaches to solving the cold start problem? ‍⭐️🚀**
 
-Answer here
+Use auxiliary information (multimodal information, side information, etc.) to overcome the cold start problem
 
 <br/>
 
@@ -1005,19 +1038,29 @@ Answer here
 
 **What is a time series? 👶**
 
-Answer here
+A time series is a series of data points indexed in time order. Most commonly, a time series is a sequence taken at successive equally spaced points in time. Thus it is a sequence of discrete-time data.
 
 <br/>
 
 **How is time series different from the usual regression problem? 👶**
 
-Answer here
+The biggest difference is that time series regression accounts for the autocorrelation between time events, which always exists, while in normal regression, independence of serial errors are presumed, or at least minimized.
 
 <br/>
 
 **Which models do you know for solving time series problems? ‍⭐️**
 
-Answer here
+Autoregression (AR)
+Moving Average (MA)
+Autoregressive Moving Average (ARMA)
+Autoregressive Integrated Moving Average (ARIMA)
+Seasonal Autoregressive Integrated Moving-Average (SARIMA)
+Seasonal Autoregressive Integrated Moving-Average with Exogenous Regressors (SARIMAX)
+Vector Autoregression (VAR)
+Vector Autoregression Moving-Average (VARMA)
+Vector Autoregression Moving-Average with Exogenous Regressors (VARMAX)
+Simple Exponential Smoothing (SES)
+Holt Winter’s Exponential Smoothing (HWES)
 
 <br/>
 
@@ -1041,8 +1084,7 @@ Answer here
 
 **What are the problems with using trees for solving time series problems? ‍⭐️**
 
-Answer here
-
+Random Forests don’t fit very well for increasing or decreasing trends which are usually encountered when dealing with time-series analysis, such as seasonality.
 <br/>
 
 
