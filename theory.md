@@ -34,7 +34,7 @@ Answer here
 
 **How do we check if a variable follows the normal distribution? ‍⭐️**
 
-Answer here
+For quick and visual identification of a normal distribution, use a QQ plot if you have only one variable to look at and a Box Plot if you have many. Use a histogram if you need to present your results to a non-statistical public. As a statistical test to confirm your hypothesis, use the Shapiro Wilk test.
 
 <br/>
 
